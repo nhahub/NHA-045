@@ -1,271 +1,408 @@
-# MobileGaze: Pre-trained mobile nets for Gaze-Estimation
-
-![Downloads](https://img.shields.io/github/downloads/yakhyo/gaze-estimation/total)
-[![GitHub Repo stars](https://img.shields.io/github/stars/yakhyo/gaze-estimation)](https://github.com/yakhyo/gaze-estimation/stargazers)
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/yakhyo/gaze-estimation)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14257640.svg)](https://doi.org/10.5281/zenodo.14257640)
-
-<!--
-<h5 align="center"> If you like our project, please give us a star ⭐ on GitHub for the latest updates.</h5> 
--->
-
-<!--
 <div align="center">
-  <img src="assets/out_video.gif">
-</div>
--->
 
-<!-- <video controls autoplay loop src="https://github.com/user-attachments/assets/a3af56a9-25af-4827-b716-27f610def59a" muted="false" width="100%"></video> -->
+<img src="logo2.png" alt="SEMSOL Logo" width="1500" style="border-radius: 50%;"/>
+
+#  SEMSOL - Student Engagement Monitoring System
+
 <div align="center">
- <img src="assets/out_gif.gif" width="100%">
- <p>
- Video by Yan Krukau: https://www.pexels.com/video/male-teacher-with-his-students-8617126/
- </p>
+
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-ff4b4b.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+
+**Real-time Multi-Modal Student Engagement Detection using Computer Vision & Deep Learning**
+
+[Demo](#-demo) • [Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Documentation](#-documentation)
+
+---
+
+##  Demo
+
+<div align="center">
+
+### 📹 Watch SEMSOL in Action
+
+[![SEMSOL Demo Video](https://img.youtube.com/vi/_XyUh5nAyrw/maxresdefault.jpg)](https://www.youtube.com/watch?v=_XyUh5nAyrw)
+
+**Click to watch:** Real-time engagement monitoring with live analytics and session reports
+
 </div>
 
-This project aims to perform gaze estimation using several deep learning models like ResNet, MobileNet v2, and MobileOne. It supports both classification and regression for predicting gaze direction. Built on top of [L2CS-Net](https://github.com/Ahmednull/L2CS-Net), the project includes additional pre-trained models and refined code for better performance and flexibility.
+---
 
-## Features
+## 🎯 Overview
 
-- [x] **ONNX Inference**: Export pytorch weights to ONNX and ONNX runtime inference.
-- [x] **ResNet**: [Deep Residual Networks](https://arxiv.org/abs/1512.03385) - Enables deeper networks with better accuracy through residual learning.
-- [x] **MobileNet v2**: [Inverted Residuals and Linear Bottlenecks](https://arxiv.org/abs/1801.04381) - Efficient model for mobile applications, balancing performance and computational cost.
-- [x] **MobileOne (s0-s4)**: [An Improved One millisecond Mobile Backbone](https://arxiv.org/abs/2206.04040) - Achieves near-instant inference times, ideal for real-time mobile applications.
-- [x] **Face Detection**: [uniface](https://github.com/yakhyo/uniface) - **Uniface** face detection library uses RetinaFace model.
+**SEMSOL** (Student Engagement Monitoring System for Online Learning) is an intelligent system that monitors and analyzes student engagement in real-time using advanced computer vision and machine learning techniques. The system combines **gaze estimation**, **blink detection**, and **deep learning classification** to provide comprehensive engagement analytics.
 
-> [!NOTE]  
-> All models are trained only on **Gaze360** dataset.
+### 🌟 Why SEMSOL?
 
-## Installation
+-  **Educational Insights**: Help educators understand student attention patterns
+-  **Research Tool**: Collect quantitative engagement data for academic research
+-  **Productivity Tracking**: Monitor focus and concentration during work/study
+-  **Accessibility**: Analyze visual attention patterns for inclusive design
+-  **Data-Driven Decisions**: Make informed improvements based on engagement metrics
 
-1. Clone the repository:
+---
+
+## ✨ Features
+
+### 🎥 Real-Time Monitoring
+
+- ** Blink Detection**: Tracks eye blinks to detect drowsiness, stress, and distraction
+- ** Gaze Estimation**: Monitors head orientation (pitch/yaw) to track attention direction
+- ** ML Classification**: AI-powered engagement level prediction (4 levels)
+- ** Multi-Source Support**: Works with webcam or pre-recorded video files
+
+### 📊 Comprehensive Analytics
+
+- **Interactive Dashboards**: Real-time metrics and visualizations
+- **Engagement Timeline**: Track engagement changes throughout the session
+- **Gaze Heatmaps**: Visualize where attention was focused
+- **Blink Analysis**: Monitor eye activity and fatigue indicators
+- **Statistical Summaries**: Detailed breakdowns of all metrics
+
+### 💾 Export & Reporting
+
+- **CSV Export**: Raw data for further analysis
+- **JSON Reports**: Structured summaries with statistics
+- **Interactive HTML Charts**: Standalone visualizations (Plotly)
+- **Session Summaries**: Comprehensive engagement breakdowns
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.8 or higher
+- Webcam (for live monitoring) or video files
+- CUDA-capable GPU (optional, for faster inference)
+
+### Installation
 
 ```bash
-git clone https://github.com/yakhyo/gaze-estimation.git
-cd gaze-estimation
-```
+# Clone the repository
+git clone https://github.com/Mario-Gamal-Sobhy/SEMSOL.git
+cd SEMSOL
+git checkout V1.2
 
-2. Install the required dependencies:
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-3. Download weight files:
+### Download Model Weights
 
-   a) Download weights from the following links:
+Place the following model files in the `weights/` directory:
 
-   | Model        | PyTorch Weights                                                                                             | ONNX Weights                                                                                                        | Size    | Epochs | MAE*  |
-   | ------------ | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------- | ------ | ----- |
-   | ResNet-18    | [resnet18.pt](https://github.com/yakhyo/gaze-estimation/releases/download/v0.0.1/resnet18.pt)               | [resnet18_gaze.onnx](https://github.com/yakhyo/gaze-estimation/releases/download/v0.0.1/resnet18_gaze.onnx)         | 43 MB   | 200    | 12.84 |
-   | ResNet-34    | [resnet34.pt](https://github.com/yakhyo/gaze-estimation/releases/download/v0.0.1/resnet34.pt)               | [resnet34_gaze.onnx](https://github.com/yakhyo/gaze-estimation/releases/download/v0.0.1/resnet34_gaze.onnx)         | 81.6 MB | 200    | 11.33 |
-   | ResNet-50    | [resnet50.pt](https://github.com/yakhyo/gaze-estimation/releases/download/v0.0.1/resnet50.pt)               | [resnet50_gaze.onnx](https://github.com/yakhyo/gaze-estimation/releases/download/v0.0.1/resnet50_gaze.onnx)         | 91.3 MB | 200    | 11.34 |
-   | MobileNet V2 | [mobilenetv2.pt](https://github.com/yakhyo/gaze-estimation/releases/download/v0.0.1/mobilenetv2.pt)         | [mobilenetv2_gaze.onnx](https://github.com/yakhyo/gaze-estimation/releases/download/v0.0.1/mobilenetv2_gaze.onnx)   | 9.59 MB | 200    | 13.07 |
-   | MobileOne S0 | [mobileone_s0_fused.pt](https://github.com/yakhyo/gaze-estimation/releases/download/v0.0.1/mobileone_s0.pt) | [mobileone_s0_gaze.onnx](https://github.com/yakhyo/gaze-estimation/releases/download/v0.0.1/mobileone_s0_gaze.onnx) | 4.8 MB  | 200    | 12.58 |
-   | MobileOne S1 | [not available](#)                                                                                          | [not available](#)                                                                                                  | xx MB   | 200    | \*    |
-   | MobileOne S2 | [not available](#)                                                                                          | [not available](#)                                                                                                  | xx MB   | 200    | \*    |
-   | MobileOne S3 | [not available](#)                                                                                          | [not available](#)                                                                                                  | xx MB   | 200    | \*    |
-   | MobileOne S4 | [not availablet](#)                                                                                         | [not available](#)                                                                                                  | xx MB   | 200    | \*    |
+| Model | Size | Description | Download |
+|-------|------|-------------|----------|
+| `resnet34.pt` | ~85 MB | Gaze estimation model | [Link](#) |
+| `engagement_classifier.pkl` | ~875 KB | Engagement classifier | [Link](#) |
 
-   '\*' - soon will be uploaded (due to limited computing resources I cannot publish rest of the weights, but you still can train them with given code).
-   
-   *MAE (Mean Absolute Error) - lower values indicate better accuracy in degrees.
+> **Note**: Model files are not included in the repository due to size constraints. Download them separately.
 
-   b) Run the command below to download weights to the `weights` directory (Linux):
-
-   ```bash
-   # Download specific model weights
-   sh download.sh [model_name]
-   # Available models: resnet18, resnet34, resnet50, mobilenetv2, mobileone_s0
-   
-   # Example:
-   sh download.sh resnet18
-   ```
-
-## Usage
-
-### Datasets
-
-**Note**: Datasets must be downloaded separately and organized as shown below.
-
-Dataset folder structure:
-
-```
-data/
-├── Gaze360/
-│   ├── Image/
-│   └── Label/
-└── MPIIFaceGaze/
-    ├── Image/
-    └── Label/
-```
-
-**Gaze360**
-
-- Link to download dataset: https://gaze360.csail.mit.edu/download.php
-- Data pre-processing code: https://phi-ai.buaa.edu.cn/Gazehub/3D-dataset/#gaze360
-
-**MPIIGaze**
-
-- Link to download dataset: [download page](https://www.mpi-inf.mpg.de/departments/computer-vision-and-machine-learning/research/gaze-based-human-computer-interaction/its-written-all-over-your-face-full-face-appearance-based-gaze-estimation)
-- Data pre-processing code: https://phi-ai.buaa.edu.cn/Gazehub/3D-dataset/#mpiifacegaze
-
-### Training
+### Run the Application
 
 ```bash
-python main.py --data [dataset_path] --dataset [dataset_name] --arch [architecture_name]
+streamlit run app.py
 ```
 
-`main.py` arguments:
+The app will open in your browser at `http://localhost:8501`
+
+---
+
+## 📖 Usage
+
+### 1️⃣ Configure Settings
+
+- **Video Source**: Choose webcam (0, 1, 2) or upload video file
+- **Detection Options**: Enable/disable blink detection
+- **ML Classifier**: Toggle trained model vs rule-based classification
+- **Visual Settings**: Customize bounding boxes and gaze arrows
+
+### 2️⃣ Start Monitoring
+
+1. Click **"🚀 Start Monitoring"** in the sidebar
+2. Wait for camera initialization (2-3 seconds)
+3. Blink detector calibrates automatically (50 frames)
+4. Real-time metrics appear on the right panel
+
+### 3️⃣ View Analytics
+
+- **For Videos**: Statistics auto-generate when video ends
+- **For Webcam**: Click **"⏹ Stop Monitoring"** to view analytics
+- Explore interactive charts and download reports
+
+### 4️⃣ Export Data
+
+Download your session data in multiple formats:
+- 📄 **CSV**: Full dataset with timestamps
+- 📋 **JSON**: Summary statistics and metrics
+- 📊 **HTML**: Interactive charts (open in browser)
+
+---
+
+## 🎓 Engagement Levels
+
+The system classifies engagement into 4 distinct levels:
+
+| Level | Emoji | Description | Indicators |
+|-------|-------|-------------|------------|
+| **Highly Engaged** | 🟢 | Fully attentive and focused | Looking at screen, normal blink rate, stable gaze |
+| **Engaged** | 🟡 | Generally attentive | Mostly on-task with minor distractions |
+| **Partially Engaged** | 🟠 | Distracted or wandering | Irregular gaze, looking away frequently |
+| **Disengaged** | 🔴 | Not paying attention | Looking away, drowsy, or distracted |
+
+---
+
+## 🏗️ Architecture
 
 ```
-usage: main.py [-h] [--data DATA] [--dataset DATASET] [--output OUTPUT] [--checkpoint CHECKPOINT] [--num-epochs NUM_EPOCHS] [--batch-size BATCH_SIZE] [--arch ARCH] [--alpha ALPHA] [--lr LR] [--num-workers NUM_WORKERS]
-
-Gaze estimation training.
-
-options:
-  -h, --help            show this help message and exit
-  --data DATA           Directory path for gaze images.
-  --dataset DATASET     Dataset name, available `gaze360`, `mpiigaze`.
-  --output OUTPUT       Path of output models.
-  --checkpoint CHECKPOINT
-                        Path to checkpoint for resuming training.
-  --num-epochs NUM_EPOCHS
-                        Maximum number of training epochs.
-  --batch-size BATCH_SIZE
-                        Batch size.
-  --arch ARCH           Network architecture, currently available: resnet18/34/50, mobilenetv2, mobileone_s0-s4.
-  --alpha ALPHA         Regression loss coefficient.
-  --lr LR               Base learning rate.
-  --num-workers NUM_WORKERS
-                        Number of workers for data loading.
+┌─────────────────────────────────────────────────────────────┐
+│                        Input Stream                          │
+│                    (Webcam / Video File)                     │
+└──────────────────────┬──────────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Face Detection                            │
+│                   (RetinaFace / UniFace)                     │
+└──────────────────────┬──────────────────────────────────────┘
+                       │
+           ┌───────────┴───────────┐
+           │                       │
+           ▼                       ▼
+┌──────────────────────┐  ┌──────────────────────┐
+│   Gaze Estimation    │  │  Blink Detection     │
+│   (ResNet-34)        │  │  (EAR Algorithm)     │
+│   • Pitch angle      │  │  • Blink rate        │
+│   • Yaw angle        │  │  • EAR values        │
+└──────────┬───────────┘  └──────────┬───────────┘
+           │                         │
+           └────────────┬────────────┘
+                        │
+                        ▼
+           ┌────────────────────────┐
+           │  Feature Extraction    │
+           │  • Aggregated stats    │
+           │  • Temporal patterns   │
+           └────────────┬───────────┘
+                        │
+                        ▼
+           ┌────────────────────────┐
+           │  ML Classification     │
+           │  (Random Forest / CNN) │
+           └────────────┬───────────┘
+                        │
+                        ▼
+           ┌────────────────────────┐
+           │  Engagement Level      │
+           │  (1-4 + Confidence)    │
+           └────────────────────────┘
 ```
 
-### Evaluation
+---
 
-```bash
-python evaluate.py --data [dataset_path] --dataset [dataset_name] --weight [weight_path] --arch [architecture_name]
-```
+## 📊 Metrics Explained
 
-`evaluate.py` arguments:
+### Gaze Metrics
+- **Pitch**: Vertical head angle (-90° to +90°)
+- **Yaw**: Horizontal head angle (-90° to +90°)
+- **Looking at Screen**: |pitch| < 12° AND |yaw| < 15°
 
-```
-usage: evaluate.py [-h] [--data DATA] [--dataset DATASET] [--weights WEIGHTS] [--batch-size BATCH_SIZE] [--arch ARCH] [--num-workers NUM_WORKERS]
+### Blink Metrics
+- **EAR** (Eye Aspect Ratio): Measure of eye openness (0.0 - 1.0)
+  - Typical range: 0.25 - 0.35
+  - Blink detected: < 0.20
+- **Blink Rate**: Blinks per second (calculated over 10s window)
+  - Normal: 0.15 - 0.25 bps (9-15 bpm)
+  - Drowsy: < 0.10 bps
+  - Stressed: > 0.35 bps
 
-Gaze estimation evaluation.
+### Engagement Score
+- Overall score: 0-100 (weighted average)
+- Formula: `(Highly×100 + Engaged×70 + Partial×40 + Disengaged×10) / total_frames`
 
-options:
-  -h, --help            show this help message and exit
-  --data DATA           Directory path for gaze images.
-  --dataset DATASET     Dataset name, available `gaze360`, `mpiigaze`
-  --weights WEIGHTS     Path to model weight for evaluation.
-  --batch-size BATCH_SIZE
-                        Batch size.
-  --arch ARCH           Network architecture, currently available: resnet18/34/50, mobilenetv2, mobileone_s0-s4.
-  --num-workers NUM_WORKERS
-                        Number of workers for data loading.
-```
+---
 
-### Inference
+## 🛠️ Advanced Configuration
 
-```bash
-# Run inference on webcam (camera index 0)
-python inference.py --model resnet18 --weight weights/resnet18.pt --view --source 0
+### Camera Troubleshooting
 
-# Run inference on video file
-python inference.py --model [model_name] --weight [model_weight_path] --view --source [source_video] --output [output_file] --dataset [dataset_name]
-```
+If camera doesn't work:
 
-`inference.py` arguments:
+1. **Test Camera**: Click "🧪 Test Camera" in sidebar
+2. **Close competing apps**: Zoom, Teams, Skype, OBS
+3. **Try different indices**: Switch between Webcam (0), (1), (2)
+4. **Check permissions**: Allow camera access in system settings
 
-```
-usage: inference.py [-h] [--model MODEL] [--weight WEIGHT] [--view] [--source SOURCE] [--output OUTPUT] [--dataset DATASET]
+### Model Configuration
 
-Gaze estimation inference
+Edit `config.py` to customize:
 
-options:
-  -h, --help         show this help message and exit
-  --model MODEL      Model name, default `resnet18`
-  --weight WEIGHT    Path to gaze esimation model weights
-  --view             Display the inference results
-  --source SOURCE    Path to source video file or camera index
-  --output OUTPUT    Path to save output file
-  --dataset DATASET  Dataset name to get dataset related configs
-```
-
-### ONNX Export and Inference
-
-**Export to ONNX**
-
-```bash
-python onnx_export.py --weight [model_path] --model [model_name] --dynamic
-```
-
-`onnx_export.py` arguments:
-
-```
-usage: onnx_export.py [-h] [-w WEIGHT] [-n {resnet18,resnet34,resnet50,mobilenetv2,mobileone_s0}] [-d {gaze360}] [--dynamic]
-
-Gaze Estimation Model ONNX Export
-
-options:
-  -h, --help            show this help message and exit
-  -w WEIGHT, --weight WEIGHT
-                        Trained state_dict file path to open
-  -n {resnet18,resnet34,resnet50,mobilenetv2,mobileone_s0}, --model {resnet18,resnet34,resnet50,mobilenetv2,mobileone_s0}
-                        Backbone network architecture to use
-  -d {gaze360,mpiigaze}, --dataset {gaze360,mpiigaze}
-                        Dataset name for bin configuration
-  --dynamic             Enable dynamic batch size and input dimensions for ONNX export
-```
-
-**ONNX Inference**
-
-```bash
-python onnx_inference.py --source [source video / webcam index] --model [onnx model path] --output [path to save video]
-```
-
-`onnx_inference.py` arguments:
-
-```
-usage: onnx_inference.py [-h] --source SOURCE --model MODEL [--output OUTPUT]
-
-Gaze Estimation ONNX Inference
-
-options:
-  -h, --help       show this help message and exit
-  --source SOURCE  Video path or camera index (e.g., 0 for webcam)
-  --model MODEL    Path to ONNX model
-  --output OUTPUT  Path to save output video (optional)
-```
-
-## Citation
-
-If you use this work in your research, please cite it as:
-
-Valikhujaev, Y. (2024). MobileGaze: Pre-trained mobile nets for Gaze-Estimation. Zenodo. [https://doi.org/10.5281/zenodo.14257640](https://doi.org/10.5281/zenodo.14257640)
-
-Alternatively, in BibTeX format:
-
-```bibtex
-@misc{valikhujaev2024mobilegaze,
-  author       = {Valikhujaev, Y.},
-  title        = {MobileGaze: Pre-trained mobile nets for Gaze-Estimation},
-  year         = {2024},
-  publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.14257640},
-  url          = {https://doi.org/10.5281/zenodo.14257640}
+```python
+data_config = {
+    "gaze360": {
+        "bins": 90,
+        "binwidth": 4,
+        "angle": 180
+    }
 }
 ```
 
-## Reference
+### Sensitivity Tuning
 
-1. This project is built on top of [L2CS-Net](https://github.com/Ahmednull/L2CS-Net). Most of the code parts have been re-written for reproducibility and adaptability. Several additional backbones are provided with pre-trained weights.
-2. https://github.com/apple/ml-mobileone
-3. [uniface](https://github.com/yakhyo/uniface) - face detection library used for inference in `detect.py`.
+- **EAR Sensitivity**: Lower = more sensitive blink detection (default: 0.80)
+- **Target FPS**: Higher = faster processing, more CPU usage (default: 15)
+- **Gaze Model**: Choose `resnet34` (more accurate) or `resnet18` (faster)
 
-<!--
-## Star History
+---
 
-[![Star History Chart](https://api.star-history.com/svg?repos=yakhyo/gaze-estimation&type=Date)](https://star-history.com/#yakhyo/gaze-estimation&Date)
--->
+## 📁 Project Structure
+
+```
+SEMSOL/
+├── app.py                          # Main Streamlit application
+├── config.py                       # Configuration settings
+├── uniface.py                      # Face detection module
+├── requirements.txt                # Python dependencies
+├── README.md                       # This file
+│
+├── utils/
+│   ├── blink_detector.py          # Blink detection logic
+│   ├── helpers.py                 # Utility functions
+│   ├── ml_engagement_classifier.py # ML classifier training
+│   └── save_model_example.py      # Model export utilities
+│
+├── weights/
+│   ├── resnet34.pt                # Gaze estimation weights
+│   └── engagement_classifier.pkl  # Trained classifier
+│
+├── assets/
+│   └── in_video.mp4               # Sample test video
+│
+└── docs/
+    └── API.md                      # API documentation
+```
+
+---
+
+## 🔬 Research & Citations --
+
+If you use SEMSOL in your research, please cite:
+
+```bibtex
+@software{semsol2024,
+  author = {Mario Gamal Sobhy},
+  title = {SEMSOL: Student Engagement Monitoring System for Online Learning},
+  year = {2024},
+  url = {https://github.com/Mario-Gamal-Sobhy/SEMSOL}
+}
+```
+
+### Related Work
+
+- **Gaze Estimation**: Based on Gaze360 dataset and ResNet architectures
+- **Blink Detection**: Uses EAR (Eye Aspect Ratio) method from Soukupová & Čech (2016)
+- **Face Detection**: RetinaFace for robust face localization
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these guidelines:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/AmazingFeature`)
+3. **Commit** your changes (`git commit -m 'Add AmazingFeature'`)
+4. **Push** to the branch (`git push origin feature/AmazingFeature`)
+5. **Open** a Pull Request
+
+### Development Setup
+
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/SEMSOL.git
+cd SEMSOL
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dev dependencies
+pip install -r requirements.txt
+pip install black flake8 pytest
+```
+
+---
+
+## 🐛 Known Issues & Limitations
+
+- **Camera Compatibility**: Some laptops require specific backends (DSHOW, V4L2)
+- **Model Size**: Deep learning models require ~200MB disk space
+- **GPU Required**: Real-time processing works best with CUDA GPU
+- **Lighting Conditions**: Performance degrades in very low light
+- **Multiple Faces**: Currently optimized for single-person monitoring
+
+---
+
+## 📅 Roadmap
+
+- [ ] **Multi-person tracking**: Support multiple students simultaneously
+- [ ] **Audio analysis**: Integrate speech engagement detection
+- [ ] **Mobile support**: Android/iOS app versions
+- [ ] **Cloud deployment**: Scalable infrastructure for classrooms
+- [ ] **LMS integration**: Canvas, Moodle, Blackboard plugins
+- [ ] **Privacy features**: On-device processing, no data upload
+- [ ] **Real-time alerts**: Notify educators of disengagement
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Mario Gamal Sobhy**
+
+- GitHub: [@Mario-Gamal-Sobhy](https://github.com/Mario-Gamal-Sobhy)
+- Email: [your.email@example.com](mailto:your.email@example.com)
+
+---
+
+## 🙏 Acknowledgments
+
+- **Gaze360 Dataset**: For gaze estimation training data
+- **RetinaFace**: For robust face detection
+- **Streamlit**: For the amazing web framework
+- **PyTorch Community**: For deep learning tools
+- **Open Source Contributors**: For libraries and inspiration
+
+---
+
+## 📞 Support
+
+Having issues? Here's how to get help:
+
+1. **Check Documentation**: Read the [Usage](#-usage) section
+2. **Search Issues**: Look through [existing issues](https://github.com/Mario-Gamal-Sobhy/SEMSOL/issues)
+3. **Create Issue**: Open a [new issue](https://github.com/Mario-Gamal-Sobhy/SEMSOL/issues/new) with details
+4. **Discussions**: Join our [GitHub Discussions](https://github.com/Mario-Gamal-Sobhy/SEMSOL/discussions)
+
+---
+
+<div align="center">
+
+**⭐ If you find SEMSOL helpful, please consider giving it a star!**
+
+Made with ❤️ by [Mario Gamal Sobhy](https://github.com/Mario-Gamal-Sobhy)
+                 [Maximos Naseef Bassiet](https://github.com/maxemosnassef-dotcom)
+
+
+[⬆ Back to Top](#-semsol---student-engagement-monitoring-system)
+
+</div>
